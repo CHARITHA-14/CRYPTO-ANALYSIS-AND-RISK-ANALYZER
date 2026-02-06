@@ -5,6 +5,8 @@ from pathlib import Path
 
 import streamlit as st
 
+BASE_DIR = Path(__file__).resolve().parent
+
 # ---------------- STREAMLIT PAGE CONFIG ----------------
 st.set_page_config(
     page_title="Crypto Analysis & Risk Analyzer",
@@ -23,10 +25,29 @@ def inject_login_css() -> None:
     """
     Inject the existing login.css styles into Streamlit so the
     login view keeps your custom look & animations.
+
+    IMPORTANT:
+    Streamlit manages the <body> layout. Your existing CSS styles `body` as a flex
+    container, which can cause a blank/empty screen in Streamlit. We safely scope
+    those rules to Streamlit's root container (`.stApp`) instead.
     """
-    css_path = Path("static/login.css")
+    css_path = BASE_DIR / "static" / "login.css"
     if css_path.exists():
         css = css_path.read_text(encoding="utf-8")
+
+        # Scope potentially-breaking selectors away from <body>
+        css = css.replace("body::before", ".stApp::before")
+        css = css.replace("body > *", ".stApp > *")
+        css = css.replace("body{", ".stApp{")
+        css = css.replace("body {", ".stApp {")
+
+        # Make sure Streamlit default chrome doesn't overlay the background
+        css += """
+        /* Streamlit layout fixes */
+        .stApp { min-height: 100vh; }
+        section.main > div { padding-top: 2rem; }
+        """
+
         st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
 
 
@@ -75,6 +96,9 @@ def show_login():
     st.session_state.setdefault("authenticated", False)
     st.session_state.setdefault("login_error", "")
 
+    # Page heading (helps confirm the app is rendering even if CSS breaks)
+    st.markdown("## Crypto Analysis & Risk Analyzer")
+
     # Build a layout that reuses your classes
     st.markdown('<div class="login-page">', unsafe_allow_html=True)
 
@@ -83,9 +107,9 @@ def show_login():
 
     with col_ill:
         st.markdown('<div class="login-illustration">', unsafe_allow_html=True)
-        img_path_svg = Path("static/login-graphic.svg")
+        img_path_svg = BASE_DIR / "static" / "login-graphic.svg"
         if img_path_svg.exists():
-            st.image(str(img_path_svg), use_column_width=True)
+            st.image(str(img_path_svg), use_container_width=True)
         else:
             st.info("Add an image at `static/login-graphic.svg` to see the illustration.")
         st.markdown("</div>", unsafe_allow_html=True)
@@ -101,7 +125,7 @@ def show_login():
             if username == USERNAME and password == PASSWORD:
                 st.session_state["authenticated"] = True
                 st.session_state["login_error"] = ""
-                st.experimental_rerun()
+                st.rerun()
             else:
                 st.session_state["authenticated"] = False
                 st.session_state["login_error"] = "Invalid credentials"
@@ -122,7 +146,7 @@ def show_dashboard():
     if st.sidebar.button("Logout"):
         st.session_state["authenticated"] = False
         st.session_state["login_error"] = ""
-        st.experimental_rerun()
+        st.rerun()
 
     st.title("Milestone 1 – Data Acquisition")
     st.caption("Live crypto prices via CoinGecko with CSV logging.")
