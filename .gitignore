@@ -1,0 +1,20 @@
+__pycache__/
+*.py[cod]
+*.log
+.DS_Store
+
+# Environments
+.venv/
+venv/
+env/
+
+# Streamlit
+.streamlit/
+
+# Data outputs
+crypto_data.csv
+
+# IDE
+.vscode/
+.idea/
+
