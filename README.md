@@ -1,34 +1,57 @@
-# CRYPTO ANALYSIS AND RISK ANALYZER
+# Crypto Analysis and Risk Analyzer
 
-This project includes:
-- A **Streamlit app** (`streamlit_app.py`) with login + live crypto data dashboard
-- The original **Flask app** (`app.py`) with HTML templates
+**One project** — login, live crypto data (CoinGecko), realtime statistics, and user-addable data.  
+Run with a single command: **`streamlit run app.py`**
 
-## Run with Streamlit (recommended)
+---
+
+## Run locally (one project, one command)
+
+### 1. Clone the repo
+
+```bash
+git clone https://github.com/CHARITHA-14/CRYPTO-ANALYSIS-AND-RISK-ANALYZER.git
+cd CRYPTO-ANALYSIS-AND-RISK-ANALYZER
+```
+
+### 2. Install dependencies
 
 ```bash
 pip install -r requirements.txt
-streamlit run streamlit_app.py
 ```
 
-Login:
-- Username: `admin@gmail.com`
-- Password: `123456`
-
-## Run with Flask (optional)
+### 3. Run the app
 
 ```bash
-pip install -r requirements.txt
-python app.py
+streamlit run app.py
 ```
 
-Open `http://127.0.0.1:5000/login`
+### 4. Open in browser
+
+- App opens at **http://localhost:8501** (or the URL shown in the terminal).
+- **Login:** `admin@gmail.com` / `123456`
+
+---
+
+## Deploy online (Streamlit Community Cloud)
+
+1. Push this repo to GitHub.
+2. Go to [share.streamlit.io](https://share.streamlit.io), sign in with GitHub, and deploy.
+3. Set **Main file path** to **`app.py`**.
+4. The app runs at the URL Streamlit gives you.
+
+Repo must contain **`app.py`** and **`requirements.txt`** (streamlit, requests, pandas).
+
+---
+
+## Features
+
+- **Login** – Sign in with username/password.
+- **Dashboard** – Live crypto table (top 5 from CoinGecko) plus your own entries.
+- **Realtime statistics** – Last updated, total volume, avg 24h %, top gainer, top loser.
+- **Add your data** – Form: name, symbol, price, 24h %, volume. Stored in `user_added_data.json`.
 
 ## Notes
-- `crypto_data.csv` is generated automatically and is **not committed** to git.
-- For Flask sessions, you can optionally set:
 
-```bash
-set FLASK_SECRET_KEY=your-secret-key
-```
-
+- `user_added_data.json` holds user-added entries (in `.gitignore`).
+- This is a single Streamlit app; there is no separate Flask project in this repo.
