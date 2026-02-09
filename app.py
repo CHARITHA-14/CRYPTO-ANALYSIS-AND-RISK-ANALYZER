@@ -15,6 +15,7 @@ USERNAME = "admin@gmail.com"
 PASSWORD = "123456"
 BASE_DIR = Path(__file__).resolve().parent
 USER_DATA_FILE = BASE_DIR / "user_added_data.json"
+HISTORY_FILE = BASE_DIR / "history.csv"
 
 
 def load_user_data():
@@ -72,6 +73,8 @@ def get_combined_data():
             "volume": float(u.get("volume", 0)),
             "source": "user",
         })
+    # log snapshot for time‑series charts
+    log_history(api_data)
     return api_data
 
 
@@ -101,6 +104,30 @@ def compute_stats(crypto_list):
         "top_loser": top_loser,
         "count": len(crypto_list),
     }
+
+
+def log_history(entries):
+    """Append current snapshot to a CSV so we can chart over time."""
+    if not entries:
+        return
+    rows = []
+    ts = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    for e in entries:
+        rows.append(
+            {
+                "time": ts,
+                "name": e.get("name", ""),
+                "symbol": e.get("symbol", ""),
+                "price": e.get("price", 0),
+                "change": e.get("change", 0),
+                "volume": e.get("volume", 0),
+                "source": e.get("source", ""),
+            }
+        )
+    df = pd.DataFrame(rows)
+    # write header only once
+    write_header = not HISTORY_FILE.exists()
+    df.to_csv(HISTORY_FILE, mode="a", header=write_header, index=False)
 
 
 # ---------------- STREAMLIT UI ----------------
@@ -195,6 +222,45 @@ def _show_dashboard():
             st.markdown(f"**{l.get('name', l.get('symbol', '—'))}**  \n{l.get('change', 0):.2f}% 24h")
         else:
             st.caption("No data")
+
+    st.markdown("---")
+
+    # Time‑series charts for realtime feel
+    chart_left, chart_right = st.columns(2)
+    hist_df = None
+    if HISTORY_FILE.exists():
+        hist_df = pd.read_csv(HISTORY_FILE, parse_dates=["time"])
+
+    with chart_left:
+        st.subheader("Price over time")
+        if hist_df is not None and not hist_df.empty:
+            symbols = sorted(hist_df["symbol"].dropna().unique().tolist())
+            if symbols:
+                sym = st.selectbox("Asset", symbols, key="hist_symbol")
+                sub = (
+                    hist_df[hist_df["symbol"] == sym]
+                    .sort_values("time")
+                    .set_index("time")
+                )
+                st.line_chart(sub["price"], height=260)
+            else:
+                st.caption("No history yet. Stay on the page to build it.")
+        else:
+            st.caption("History builds as you keep the app running.")
+
+    with chart_right:
+        st.subheader("24h % change over time")
+        if hist_df is not None and not hist_df.empty:
+            # average 24h change across all tracked assets at each timestamp
+            sub = (
+                hist_df.groupby("time", as_index=False)["change"]
+                .mean()
+                .sort_values("time")
+                .set_index("time")
+            )
+            st.line_chart(sub["change"], height=260)
+        else:
+            st.caption("Once history is collected, market momentum appears here.")
 
     st.markdown("---")
 

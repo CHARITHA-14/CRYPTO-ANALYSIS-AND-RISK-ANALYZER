@@ -11,6 +11,7 @@ env/
 # Data outputs
 crypto_data.csv
 user_added_data.json
+history.csv
 
 # IDE
 .vscode/
