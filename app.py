@@ -159,7 +159,17 @@ def _show_login():
             st.image(str(img_path), use_container_width=True)
     with col_form:
         st.markdown(
-            "<p style='margin:0 0 6px 0;font-size:0.75rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#64748b'>Crypto Analysis and Risk Analyzer</p><h2 style='margin:0 0 20px 0;font-size:1.35rem;font-weight:600;color:#0f172a'>Sign in</h2>",
+            \"\"\"\n
+            <p style='margin:0 0 6px 0;font-size:0.75rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#64748b'>
+              Crypto Analysis &amp; Risk Analyzer
+            </p>
+            <h2 style='margin:0 0 4px 0;font-size:1.45rem;font-weight:600;color:#0f172a'>
+              Welcome back
+            </h2>
+            <p style='margin:0 0 18px 0;font-size:0.85rem;color:#6b7280;'>
+              Sign in to view your realtime crypto risk dashboard.
+            </p>
+            \"\"\",
             unsafe_allow_html=True,
         )
         username = st.text_input("Username", key="su")
