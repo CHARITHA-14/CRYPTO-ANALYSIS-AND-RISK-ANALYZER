@@ -155,28 +155,53 @@ def _show_dashboard():
         st.session_state["login_error"] = ""
         st.rerun()
 
-    st.title("Milestone 1 – Data Acquisition")
-    st.caption("Live crypto prices and user-added data. Refreshes every 30s.")
+    # Classic realtime dashboard header
+    st.markdown(
+        """
+        <div style="margin-bottom: 1.5rem;">
+          <h1 style="margin:0;font-size:1.8rem;font-weight:600;letter-spacing:-0.02em;">
+            Realtime Crypto Risk Dashboard
+          </h1>
+          <p style="margin:4px 0 0 0;font-size:0.9rem;color:#64748b;">
+            Live market snapshot with key risk signals and your own custom entries.
+          </p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
     data_all = get_combined_data()
     stats_data = compute_stats(data_all)
 
-    c1, c2, c3, c4, c5 = st.columns(5)
-    c1.metric("Last updated", stats_data["last_updated"][:16])
+    # Realtime stat strip
+    c1, c2, c3, c4 = st.columns(4)
+    c1.metric("Assets tracked", stats_data["count"])
     c2.metric("Total volume", f"{stats_data['total_volume'] / 1e9:.2f}B" if stats_data["total_volume"] else "—")
     c3.metric("Avg 24h %", f"{stats_data['avg_change']}%")
-    g = stats_data.get("top_gainer")
-    c4.metric("Top gainer", (g and f"{g.get('name', g.get('symbol', '—'))}") or "—", f"{g['change']:.2f}%" if g and g.get("change") is not None else None)
-    l = stats_data.get("top_loser")
-    c5.metric("Top loser", (l and f"{l.get('name', l.get('symbol', '—'))}") or "—", f"{l['change']:.2f}%" if l and l.get("change") is not None else None)
+    c4.metric("Last updated", stats_data["last_updated"][:16])
 
-    col_left, col_right = st.columns([1, 1.5])
+    g = stats_data.get("top_gainer")
+    l = stats_data.get("top_loser")
+    c5, c6 = st.columns(2)
+    with c5:
+        st.markdown("### Top gainer")
+        if g:
+            st.markdown(f"**{g.get('name', g.get('symbol', '—'))}**  \n{g.get('change', 0):.2f}% 24h")
+        else:
+            st.caption("No data")
+    with c6:
+        st.markdown("### Top loser")
+        if l:
+            st.markdown(f"**{l.get('name', l.get('symbol', '—'))}**  \n{l.get('change', 0):.2f}% 24h")
+        else:
+            st.caption("No data")
+
+    st.markdown("---")
+
+    col_left, col_right = st.columns([1, 1.6])
     with col_left:
-        st.subheader("Requirements")
-        st.markdown("- Python Environment Setup\n- API Integration (CoinGecko)\n- CSV Data Storage\n- Missing Value Handling")
-        st.subheader("Outputs")
-        st.markdown("- Live Crypto Prices\n- Verified API Connectivity\n- Auto CSV Storage")
         st.subheader("Add your data")
+        st.caption("Log custom tokens, simulated scenarios, or watchlist entries.")
         with st.form("add_data_form"):
             an = st.text_input("Name", key="an")
             sy = st.text_input("Symbol", key="sy")
@@ -193,20 +218,36 @@ def _show_dashboard():
                 else:
                     st.error("Name and symbol required.")
 
+        st.subheader("How realtime users benefit")
+        st.markdown(
+            "- Watch API prices and manual entries together.\n"
+            "- Use 24h % and volume as quick risk indicators.\n"
+            "- Refresh happens on every interaction; add entries while the market moves."
+        )
+
     with col_right:
-        st.subheader("Crypto Data Fetcher · Live")
+        st.subheader("Live market & custom entries")
         if data_all:
             df = pd.DataFrame(data_all)
-            df["volume"] = df["volume"].apply(lambda x: f"{x/1e9:.2f}B" if x >= 1e9 else f"{x/1e6:.2f}M" if x >= 1e6 else str(x))
+            df["volume"] = df["volume"].apply(
+                lambda x: f\"{x/1e9:.2f}B\" if x >= 1e9 else f\"{x/1e6:.2f}M\" if x >= 1e6 else str(x)
+            )
             st.dataframe(
                 df[["name", "symbol", "price", "change", "volume", "source"]].rename(
-                    columns={"name": "Name", "symbol": "Symbol", "price": "Price ($)", "change": "24h %", "volume": "Volume", "source": "Source"}
+                    columns={
+                        "name": "Name",
+                        "symbol": "Symbol",
+                        "price": "Price ($)",
+                        "change": "24h %",
+                        "volume": "Volume",
+                        "source": "Source",
+                    }
                 ),
                 use_container_width=True,
                 hide_index=True,
             )
         else:
-            st.info("No data. Add an entry or check API.")
+            st.info("No data yet. Add an entry or try again in a moment.")
 
 
 st.session_state.setdefault("authenticated", False)
