@@ -2,21 +2,21 @@
    Crypto Analysis – Login (Classic & Responsive)
    ============================================ */
 :root {
-    --bg1: #f8fafc;
-    --bg2: #e2e8f0;
-    --bg3: #cbd5e1;
-    --card: #ffffff;
-    --card-border: #e2e8f0;
-    --text: #0f172a;
-    --text-muted: #64748b;
-    --primary: #1e40af;
-    --primary-hover: #1e3a8a;
-    --accent: #3b82f6;
-    --danger: #b91c1c;
-    --success: #15803d;
-    --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
-    --shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.08), 0 2px 4px -2px rgba(15, 23, 42, 0.06);
-    --shadow-lg: 0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.06);
+    --bg1: #020617;
+    --bg2: #020617;
+    --bg3: #0b1120;
+    --card: rgba(15, 23, 42, 0.96);
+    --card-border: rgba(148, 163, 184, 0.45);
+    --text: #e5e7eb;
+    --text-muted: #9ca3af;
+    --primary: #38bdf8;
+    --primary-hover: #0ea5e9;
+    --accent: #22d3ee;
+    --danger: #f97373;
+    --success: #22c55e;
+    --shadow-sm: 0 10px 25px rgba(15, 23, 42, 0.55);
+    --shadow: 0 18px 45px rgba(15, 23, 42, 0.85);
+    --shadow-lg: 0 24px 65px rgba(15, 23, 42, 0.95);
     --radius: 12px;
     --radius-lg: 16px;
     --font-sans: "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
@@ -42,7 +42,10 @@ body {
     font-size: 16px;
     line-height: 1.5;
     color: var(--text);
-    background: linear-gradient(160deg, #243d83 0%, #3e72b6 50%, #2e5b91 100%);
+    background:
+        radial-gradient(900px 480px at 5% 0%, rgba(56, 189, 248, 0.16), transparent 60%),
+        radial-gradient(700px 520px at 95% 100%, rgba(59, 130, 246, 0.22), transparent 60%),
+        linear-gradient(135deg, var(--bg1), var(--bg3));
 }
 
 .login-page {
@@ -66,7 +69,7 @@ body {
     display: block;
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-lg);
-    border: 1px solid var(--card-border);
+    border: 1px solid rgba(15, 23, 42, 0.8);
 }
 
 .login-card {
@@ -107,7 +110,7 @@ body {
     margin-bottom: 6px;
     font-size: 0.875rem;
     font-weight: 500;
-    color: var(--text);
+    color: var(--text-muted);
 }
 
 input {
@@ -115,8 +118,8 @@ input {
     margin: 0 0 16px 0;
     padding: 12px 14px;
     border-radius: var(--radius);
-    border: 1px solid var(--card-border);
-    background: #f8fafc;
+    border: 1px solid rgba(51, 65, 85, 0.9);
+    background: rgba(15, 23, 42, 0.9);
     color: var(--text);
     font-size: 1rem;
     font-family: inherit;
@@ -125,23 +128,23 @@ input {
 }
 
 input::placeholder {
-    color: var(--text-muted);
+    color: rgba(148, 163, 184, 0.9);
 }
 
 input:focus {
     border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.18);
-    background: var(--card);
+    box-shadow: 0 0 0 2px rgba(34, 211, 238, 0.4);
+    background: rgba(15, 23, 42, 0.98);
 }
 
 .login-card button {
     width: 100%;
     margin-top: 8px;
     padding: 12px 16px;
-    border-radius: var(--radius);
+    border-radius: 999px;
     border: none;
-    background: var(--primary);
-    color: #ffffff;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: #0b1120;
     font-weight: 600;
     font-size: 0.9375rem;
     font-family: inherit;
