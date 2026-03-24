@@ -1,0 +1,22 @@
+__pycache__/
+*.py[cod]
+*.log
+.DS_Store
+
+# Environments
+.venv/
+venv/
+env/
+
+# Data outputs
+crypto_data.csv
+user_added_data.json
+<<<<<<< HEAD
+history.csv
+=======
+>>>>>>> c6b1bb1 (Single project: Streamlit only, one app.py, one run command)
+
+# IDE
+.vscode/
+.idea/
+
