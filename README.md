@@ -1,5 +1,7 @@
 # Crypto Analysis and Risk Analyzer
+
 [VIEW CVRA PROJECT DOCUMENTATION](https://docs.google.com/presentation/d/1l19mjYhDsvy_lZqZU7r4Hto2BK0eiHEc/edit?usp=sharing&ouid=107607522831738210702&rtpof=true&sd=true)
+
 **One project** — login, live crypto data (CoinGecko), realtime statistics, and user-addable data.  
 Run with a single command: **`streamlit run app.py`**
 
